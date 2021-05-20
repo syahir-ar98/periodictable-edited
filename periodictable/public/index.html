@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>three.js css3d - periodic table</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="main.css">
+	<style>
+		a {
+			color: #8ff;
+		}
+
+		#menu {
+			position: absolute;
+			bottom: 20px;
+			width: 100%;
+			text-align: center;
+		}
+
+		.element {
+			width: 230px;
+			height: 160px;
+			box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+			border: 1px solid rgba(127, 255, 255, 0.25);
+			font-family: Helvetica, sans-serif;
+			text-align: center;
+			line-height: normal;
+			cursor: default;
+		}
+
+		.element:hover {
+			box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.75);
+			border: 1px solid rgba(127, 255, 255, 0.75);
+		}
+
+		.element .number {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			font-size: 18px;
+			color: rgba(127, 255, 255, 0.75);
+		}
+
+		.element .symbol {
+			position: absolute;
+			top: 40px;
+			left: 0px;
+			right: 0px;
+			font-size: 60px;
+			font-weight: bold;
+			color: rgba(255, 255, 255, 0.75);
+			text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+		}
+
+		.element .details {
+			position: absolute;
+			bottom: 15px;
+			left: 0px;
+			right: 0px;
+			font-size: 18px;
+			color: rgba(127, 255, 255, 0.75);
+		}
+
+		button {
+			color: rgba(127, 255, 255, 0.75);
+			background: transparent;
+			outline: 1px solid rgba(127, 255, 255, 0.75);
+			border: 0px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: rgba(0, 255, 255, 0.5);
+		}
+
+		button:active {
+			color: #000000;
+			background-color: rgba(0, 255, 255, 0.75);
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> css3d - periodic table. <br/> edited by Syahir (syahir.ar98@gmail.com)
+	</div>
+	<div id="container"></div>
+	<div id="menu">
+		<button id="table">TABLE</button>
+		<button id="sphere">SPHERE</button>
+		<button id="helix">HELIX</button>
+		<button id="grid">GRID</button>
+	</div>
+
+	<script type="module">
+
+		import * as THREE from 'https://threejs.org/build/three.module.js';
+
+			import { TWEEN } from 'https://threejs.org/examples/jsm/libs/tween.module.min.js';
+			import { TrackballControls } from 'https://threejs.org/examples/jsm/controls/TrackballControls.js';
+			import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';
+
+			const table = [
+				"Adlyn", "22", "F", 1, 1,
+				"Aiman", "22", "M", 18, 1,
+				"Syida", "22", "F", 1, 2,
+				"Am", "22", "M", 2, 2,
+				"Mirul", "22", "M", 13, 2,
+				"Yana", "22", "F", 14, 2,
+				"Nisa", "22", "F", 15, 2,
+				"Duan", "22", "M", 16, 2,
+				"Alip", "22", "M", 17, 2,
+				"Pidot", "22", "M", 18, 2,
+				"Nashwa", "22", "F", 1, 3,
+				"Naim", "22", "M", 2, 3,
+				"Ipan", "22", "M", 13, 3,
+				"Abem", "22", "M", 14, 3,
+				"Syahir", "22", "M", 15, 3,
+				"Syamil", "22", "M", 16, 3,
+				"Nik", "22", "F", 17, 3,
+				"Tasha", "22", "F", 18, 3,
+				"Tirah", "22", "F", 1, 4,
+				"Syu", "22", "F", 2, 4,
+				"Hanis", "22", "F", 3, 4,
+				"Nurin", "22", "F", 4, 4,
+				"Husna", "22", "F", 5, 4,
+				"Dijah", "22", "F", 6, 4,
+				"Shahira", "22", "F", 7, 4,
+				"Mugi", "22", "M", 8, 4,
+				"Wan", "22", "M", 9, 4,
+				"Yasmin", "22", "F", 10, 4,
+				"Vell", "22", "F", 11, 4,
+				"Acip", "22", "M", 12, 4,
+				"Pajul", "23", "M", 13, 4,
+				"Izzul", "22", "M", 14, 4,
+				"Kemal", "22", "M", 15, 4,
+				"Zahed", "23", "M", 16, 4,
+				"Fadil", "23", "M", 17, 4,
+				"Sab", "23", "M", 18, 4,
+				"Ril", "23", "M", 1, 5,
+				"Dir", "25", "M", 2, 5,
+				"Eve", "23", "F", 3, 5,
+				"Eric", "23", "M", 4, 5,
+				"Anis", "23", "F", 5, 5,
+				"Faiqah", "22", "F", 6, 5,
+				"Syn", "22", "F", 7, 5,
+				"Hana", "22", "F", 8, 5,
+				"Dre", "22", "F", 9, 5,
+				"Zafri", "22", "M", 10, 5,
+				"Fendi", "22", "M", 11, 5,
+				"Daus", "22", "M", 12, 5,
+				"Imran", "23", "M", 13, 5,
+				"Wani", "23", "F", 14, 5,
+				"Divia", "23", "F", 15, 5,
+				"Jefri", "23", "M", 16, 5,
+				"Nazmi", "23", "M", 17, 5,
+				"Hazwan", "23", "M", 18, 5,
+				"Thaqif", "23", "M", 1, 6,
+				"Amani", "22", "F", 2, 6,
+				"Mito", "22", "M", 4, 9,
+				"Shah", "22", "M", 5, 9,
+				"Najmi", "22", "M", 6, 9,
+				"Muthu", "23", "M", 7, 9,
+				"Ehsan", "22", "M", 8, 9,
+				"Wassim", "22", "M", 9, 9,
+				"Faisal", "22", "M", 10, 9,
+				"Dayan", "23", "F", 11, 9,
+				"Saybah", "23", "F", 12, 9,
+				"Amni", "23", "F", 13, 9,
+				"Nani", "22", "F", 14, 9,
+				"Wafa", "22", "F", 15, 9,
+				"Auni", "22", "F", 16, 9,
+				"Maryam", "22", "F", 17, 9,
+				"Sarah", "22", "F", 18, 9,
+				"Nabila", "23", "F", 4, 6,
+				"Syafiah", "22", "F", 5, 6,
+				"Nir", "22", "F", 6, 6,
+				"Nur", "22", "F", 7, 6,
+				"Nurul", "22", "F", 8, 6,
+				"Amena", "22", "F", 9, 6,
+				"Liyana", "22", "F", 10, 6,
+				"Aqilah", "23", "F", 11, 6,
+				"Atiqah", "23", "F", 12, 6,
+				"Anis", "23", "F", 13, 6,
+				"Suhana", "22", "F", 14, 6,
+				"Suraya", "22", "F", 15, 6,
+				"Hafiz", "22", "M", 16, 6,
+				"Areeq", "22", "M", 17, 6,
+				"Aleem", "22", "M", 18, 6,
+				"Aqil", "22", "M", 1, 7,
+				"Anas", "22", "M", 2, 7,
+				"Eirfan", "23", "M", 4, 10,
+				"Emir", "22", "M", 5, 10,
+				"Iqbal", "22", "M", 6, 10,
+				"Farhan", "22", "M", 7, 10,
+				"Acey", "22", "M", 8, 10,
+				"Hasif", "22", "M", 9, 10,
+				"Fikri", "22", "M", 10, 10,
+				"Syahin", "22", "M", 11, 10,
+				"Danish", "22", "M", 12, 10,
+				"Azhan", "22", "M", 13, 10,
+				"Azim", "23", "M", 14, 10,
+				"Ezza", "23", "F", 15, 10,
+				"Dalila", "22", "F", 16, 10,
+				"Ahmad", "22", "M", 17, 10,
+				"Nora", "22", "F", 18, 10,
+				"Ira", "22", "F", 4, 7,
+				"Nadia", "Dubnium", "F", 5, 7,
+				"Farah", "22", "F", 6, 7,
+				"Sakina", "22", "F", 7, 7,
+				"Amnan", "22", "M", 8, 7,
+				"Akma", "22", "M", 9, 7,
+				"Alya", "22", "F", 10, 7,
+				"Azman", "23", "M", 11, 7,
+				"Lid", "23", "M", 12, 7,
+				"Niel", "23", "M", 13, 7,
+				"Azrin", "23", "M", 14, 7,
+				"Haziq", "23", "M", 15, 7,
+				"Afif", "23", "M", 16, 7,
+				"Farid", "23", "M", 17, 7,
+				"Efan", "22", "M", 18, 7
+			];
+
+			let camera, scene, renderer;
+			let controls;
+
+			const objects = [];
+			const targets = { table: [], sphere: [], helix: [], grid: [] };
+
+			init();
+			animate();
+
+			function init() {
+
+				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.z = 3200;
+
+				scene = new THREE.Scene();
+
+				// table
+
+				for ( let i = 0; i < table.length; i += 5 ) {
+
+					const element = document.createElement( 'div' );
+					element.className = 'element';
+
+					const number = document.createElement( 'div' );
+					number.className = 'number';
+					number.textContent = ( i / 5 ) + 1;
+					element.appendChild( number );
+
+					const symbol = document.createElement( 'div' );
+					symbol.className = 'symbol';
+					symbol.textContent = table[ i ];
+					element.appendChild( symbol );
+
+					const details = document.createElement( 'div' );
+					details.className = 'details';
+					details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
+                    if(table[ i + 2 ] == "M") {
+                        element.style.backgroundColor = 'rgb(0, 53, 186)'
+                    } else if(table[ i + 2 ] == "F") {
+                        element.style.backgroundColor = 'rgb(211, 0, 147)'
+                    }
+					element.appendChild( details );
+
+					const objectCSS = new CSS3DObject( element );
+					objectCSS.position.x = Math.random() * 4000 - 2000;
+					objectCSS.position.y = Math.random() * 4000 - 2000;
+					objectCSS.position.z = Math.random() * 4000 - 2000;
+					scene.add( objectCSS );
+
+					objects.push( objectCSS );
+
+					//
+
+					const object = new THREE.Object3D();
+					object.position.x = ( table[ i + 3 ] * 250 ) - 2370;
+					object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
+
+					targets.table.push( object );
+
+				}
+
+				// sphere
+
+				const vector = new THREE.Vector3();
+
+				for ( let i = 0, l = objects.length; i < l; i ++ ) {
+
+					const phi = Math.acos( - 1 + ( 2 * i ) / l );
+					const theta = Math.sqrt( l * Math.PI ) * phi;
+
+					const object = new THREE.Object3D();
+
+					object.position.setFromSphericalCoords( 800, phi, theta );
+
+					vector.copy( object.position ).multiplyScalar( 2 );
+
+					object.lookAt( vector );
+
+					targets.sphere.push( object );
+
+				}
+
+				// helix
+
+				for ( let i = 0, l = objects.length; i < l; i ++ ) {
+
+					const theta = i * 0.175 + Math.PI;
+					const y = - ( i * 8 ) + 450;
+
+					const object = new THREE.Object3D();
+
+					object.position.setFromCylindricalCoords( 1400, theta, y );
+
+					vector.x = object.position.x * 2;
+					vector.y = object.position.y;
+					vector.z = object.position.z * 2;
+
+					object.lookAt( vector );
+
+					targets.helix.push( object );
+
+				}
+
+				// grid
+
+				for ( let i = 0; i < objects.length; i ++ ) {
+
+					const object = new THREE.Object3D();
+
+					object.position.x = ( ( i % 5 ) * 400 ) - 800;
+					object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
+					object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
+
+					targets.grid.push( object );
+
+				}
+
+				//
+
+				renderer = new CSS3DRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+				//
+
+				controls = new TrackballControls( camera, renderer.domElement );
+				controls.minDistance = 500;
+				controls.maxDistance = 6000;
+				controls.addEventListener( 'change', render );
+
+				const buttonTable = document.getElementById( 'table' );
+				buttonTable.addEventListener( 'click', function () {
+
+					transform( targets.table, 2000 );
+
+				} );
+
+				const buttonSphere = document.getElementById( 'sphere' );
+				buttonSphere.addEventListener( 'click', function () {
+
+					transform( targets.sphere, 2000 );
+
+				} );
+
+				const buttonHelix = document.getElementById( 'helix' );
+				buttonHelix.addEventListener( 'click', function () {
+
+					transform( targets.helix, 2000 );
+
+				} );
+
+				const buttonGrid = document.getElementById( 'grid' );
+				buttonGrid.addEventListener( 'click', function () {
+
+					transform( targets.grid, 2000 );
+
+				} );
+
+				transform( targets.table, 2000 );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize );
+
+			}
+
+			function transform( targets, duration ) {
+
+				TWEEN.removeAll();
+
+				for ( let i = 0; i < objects.length; i ++ ) {
+
+					const object = objects[ i ];
+					const target = targets[ i ];
+
+					new TWEEN.Tween( object.position )
+						.to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+					new TWEEN.Tween( object.rotation )
+						.to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+				}
+
+				new TWEEN.Tween( this )
+					.to( {}, duration * 2 )
+					.onUpdate( render )
+					.start();
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				render();
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				TWEEN.update();
+
+				controls.update();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="/__/firebase/8.6.1/firebase-app.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+	<script src="/__/firebase/8.6.1/firebase-analytics.js"></script>
+
+	<!-- Initialize Firebase -->
+	<script src="/__/firebase/init.js"></script>
+</body>
+
+</html>
