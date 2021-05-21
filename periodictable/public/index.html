@@ -518,11 +518,13 @@
 					const details = document.createElement( 'div' );
 					details.className = 'details';
 					details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
+					
 					if(table[ i + 2 ] == "M") {
 						element.style.backgroundColor = 'rgb(0, 53, 186)'
 					} else if(table[ i + 2 ] == "F") {
 						element.style.backgroundColor = 'rgb(211, 0, 147)'
 					}
+					
 					element.appendChild( details );
 
 					const objectCSS = new CSS3DObject( element );
@@ -585,7 +587,7 @@
 
 				}
 
-				// hollow cylinder
+				// cylinder torso
 
 				var lookAt = new THREE.Vector3();
 				var lookAtScale = new THREE.Vector3(1.1, 1, 1.1);
@@ -646,9 +648,9 @@
 					element.appendChild( details );
 
 					const objectCSS = new CSS3DObject( element );
-					objectCSS.position.x = 4000;
-					objectCSS.position.y = 4000;
-					objectCSS.position.z = 4000;
+					objectCSS.position.x = 0;
+					objectCSS.position.y = 20000;
+					objectCSS.position.z = 20000;
 
 					scene.add( objectCSS );
 
@@ -726,9 +728,9 @@
 					element.appendChild( details );
 
 					const objectCSS = new CSS3DObject( element );
-					objectCSS.position.x = 4000;
-					objectCSS.position.y = 4000;
-					objectCSS.position.z = 4000;
+					objectCSS.position.x = 0;
+					objectCSS.position.y = -20000;
+					objectCSS.position.z = -20000;
 
 					scene.add( objectCSS );
 
@@ -957,7 +959,6 @@
 
 			}
 
-
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -978,7 +979,6 @@
 				controls.update();
 
 			}
-
 
 			function render() {
 
